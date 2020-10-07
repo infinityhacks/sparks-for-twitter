@@ -1,0 +1,47 @@
+[
+  {
+    "id": "1",
+    "username": "Rudresh Rane",
+    "nickname": "Rudresh Rane",
+    "avatar": "https://images.unsplash.com/profile-1549370052536-f9597e070d05?dpr=2&auto=format&fit=crop&w=150&h=150&q=80&crop=faces&bg=fff",
+    "tweet_time": "3m ago",
+    "media_url": "https://rmt.dogedoge.com/fetch/~/source/unsplash/photo-1601994783933-f9d76b8cc447?auto=format&fit=crop&w=1050&q=80",
+    "media_count": "18K",
+    "media_time": "01:24",
+    "media-type": "video",
+    "comment_count": "3000",
+    "like_count": "18K",
+    "share_count": "3M",
+    "tweet": "Good Morning! Everyone!"
+  },
+  {
+    "id": "2",
+    "username": "Rudresh Rane",
+    "nickname": "Rudresh Rane",
+    "tweet_time": "3m ago",
+    "avatar": "https://rmt.dogedoge.com/fetch/~/source/unsplash/photo-1601994588012-d46801b47f38?auto=format&fit=crop&w=1744&q=80",
+    "media_url": "https://rmt.dogedoge.com/fetch/~/source/unsplash/photo-1601758063402-7fd53003fd3f?auto=format&fit=crop&w=1050&q=80",
+    "media_count": "18K",
+    "media_time": "01:24",
+    "media-type": "video",
+    "comment-count": "3000",
+    "like_count": "18K",
+    "share_count": "3M",
+    "tweet": "Good Morning! Everyone!"
+  },
+  {
+    "id": "3",
+    "username": "Rudresh Rane",
+    "nickname": "Rudresh Rane",
+    "tweet_time": "3m ago",
+    "avatar": "https://images.unsplash.com/profile-1581807500172-9c3f0f5e7265image?dpr=2&auto=format&fit=crop&w=150&h=150&q=80&crop=faces&bg=fff",
+    "media_url": "https://rmt.dogedoge.com/fetch/~/source/unsplash/photo-1601738178459-640e986ee0d9?auto=format&fit=crop&w=1057&q=80",
+    "media_count": "18K",
+    "media_time": "01:24",
+    "media-type": "video",
+    "comment-count": "3000",
+    "like_count": "18K",
+    "share_count": "3M",
+    "tweet": "Good Morning! Everyone!"
+  }
+]
