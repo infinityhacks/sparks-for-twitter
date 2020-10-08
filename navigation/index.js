@@ -5,6 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import MediaScreen from "../screens/MediaScreen";
 import LoginScreen from "../screens/LoginScreen";
+import DetailScreen from "../screens/DetailScreen";
 import HomeScreen from "../screens/HomeScreen";
 import SearchScreen from "../screens/SearchScreen";
 import UserListScreen from "../screens/UserListScreen";
@@ -27,6 +28,7 @@ export default function RootNavigator() {
         <Stack.Screen name="Tweet" component={TweetScreen} />
         <Stack.Screen name="UserList" component={UserListScreen} />
         <Stack.Screen name="Search" component={SearchScreen} />
+        <Stack.Screen name="Detail" component={DetailScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

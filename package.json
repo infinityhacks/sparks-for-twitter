@@ -16,6 +16,7 @@
     "@react-navigation/native": "^5.7.5",
     "@react-navigation/stack": "^5.9.2",
     "axios": "^0.20.0",
+    "crypto-js": "^4.0.0",
     "expo": "~39.0.2",
     "expo-constants": "~9.2.0",
     "expo-font": "~8.3.0",
@@ -36,12 +37,13 @@
     "react-native-tab-view": "^2.15.1",
     "react-native-vector-icons": "^7.1.0",
     "react-native-web": "~0.13.12",
-    "react-native-webview": "10.7.0",
+    "react-native-webview": "^10.7.0",
     "react-redux": "^7.2.1",
     "redux": "^4.0.5",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
-    "styled-components": "^5.2.0"
+    "styled-components": "^5.2.0",
+    "twitter-lite": "^0.14.0"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0"

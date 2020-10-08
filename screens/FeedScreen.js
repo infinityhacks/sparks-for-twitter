@@ -18,7 +18,8 @@ export default function FeedScreen(props) {
       />
       <TweetButton
         onPress={() => {
-          props.navigation.navigate("Tweet");
+          props.navigation.push("Tweet");
+          console.log(props.navigation, "props");
         }}
       >
         <MaterialIcons name="edit" size={26} color="white" />

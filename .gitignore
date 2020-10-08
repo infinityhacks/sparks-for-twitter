@@ -4,10 +4,11 @@ npm-debug.*
 *.jks
 *.p8
 *.p12
-*.key
+*.keys
 *.mobileprovision
 *.orig.*
 web-build/
+.env
 
 # macOS
 .DS_Store

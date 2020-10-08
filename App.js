@@ -7,9 +7,9 @@ import { Provider } from "react-redux";
 import { store, persistor } from "./store";
 import { PersistGate } from "redux-persist/integration/react";
 import { AppLoading } from "expo";
+import Twitter from "twitter-lite";
 
 export default function App() {
-  const [fontLoaded, setFontLoaded] = useState(false);
   const fetchFonts = () => {
     return Font.loadAsync({
       Roboto: require("./assets/fonts/Roboto-Regular.ttf"),
@@ -35,4 +35,15 @@ export default function App() {
       </PersistGate>
     </Provider>
   );
+}
+
+function makeid(length) {
+  var result = "";
+  var characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
 }

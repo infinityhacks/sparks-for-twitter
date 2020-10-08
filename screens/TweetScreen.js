@@ -220,4 +220,5 @@ const MediaCover = styled.Image`
   flex: 1;
   align-items: center;
   justify-content: center;
+  margin: 10px;
 `;

@@ -6,7 +6,11 @@ import { Dimensions, TouchableOpacity } from "react-native";
 export default function TwitterCard({ navigation, ...props }) {
   return (
     <CardWrapper>
-      <CardHeader>
+      <CardHeader
+        onPress={() => {
+          navigation.navigate("Profile");
+        }}
+      >
         <AvatarWrapper>
           <Avatar.Image
             source={{
@@ -21,7 +25,13 @@ export default function TwitterCard({ navigation, ...props }) {
         </UserInfoWrapper>
         <TweetTime>{props.tweet_time}</TweetTime>
       </CardHeader>
-      <TweetWrapper>{props.tweet}</TweetWrapper>
+      <TouchableTweet
+        onPress={() => {
+          navigation.navigate("Detail");
+        }}
+      >
+        <TweetWrapper>{props.tweet}</TweetWrapper>
+      </TouchableTweet>
       <MediaWrapper>
         <TouchableOpacity
           onPress={() => {
@@ -71,10 +81,10 @@ export default function TwitterCard({ navigation, ...props }) {
 const CardWrapper = styled.View`
   flex-direction: column;
   background-color: "rgba(33, 33, 33, 1)";
-  margin-top: 3px;
   margin-bottom: 3px;
+  height: 380px;
 `;
-const CardHeader = styled.View`
+const CardHeader = styled.TouchableOpacity`
   flex-direction: row;
 `;
 const AvatarWrapper = styled.View`
@@ -98,6 +108,7 @@ const TweetTime = styled.Text`
   color: "rgba(255,255,255,1)";
   line-height: 60px;
 `;
+const TouchableTweet = styled.TouchableOpacity``;
 const TweetWrapper = styled.Text`
   color: "rgba(255,255,255,1)";
   margin: 10px;
@@ -112,6 +123,7 @@ const MediaCover = styled.Image`
   flex: 1;
   align-items: center;
   justify-content: center;
+  margin: 5px;
 `;
 const WatchCount = styled.Text`
   flex: 1;
