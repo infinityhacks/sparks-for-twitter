@@ -17,7 +17,7 @@ import ProfileTabBar from "../components/ProfileTabBar";
 import { NavigationContainer } from "@react-navigation/native";
 const Stack = createStackNavigator();
 export default function RootNavigator() {
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{}} headerMode="none">
@@ -49,7 +49,6 @@ function DrawerNavigator() {
 const Tab = createMaterialTopTabNavigator();
 
 function MyTabs() {
-  console.log(RootTabBar, "RootTabBar");
   return (
     <Tab.Navigator
       tabBar={(props) => <RootTabBar {...props} />}

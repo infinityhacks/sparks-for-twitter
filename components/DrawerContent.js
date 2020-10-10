@@ -1,5 +1,5 @@
-import React from "react";
-import { View } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, AsyncStorage } from "react-native";
 import styled from "styled-components";
 import {
   Entypo,
@@ -12,6 +12,12 @@ import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 export default function DrawerContent(props) {
+  const [userInfo, setUserInfo] = useState(null);
+  useEffect(() => {
+    AsyncStorage.getItem("user_info").then(res => {
+      setUserInfo(JSON.parse(res))
+    })
+  })
   return (
     <DrawerWarpper style={{ flex: 1 }}>
       <Drawer.Section>

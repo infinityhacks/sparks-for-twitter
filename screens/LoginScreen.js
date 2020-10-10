@@ -6,8 +6,62 @@ import {
   SwipeImage2,
   SwipeImage3,
 } from "../components/SwipeImage";
+import twitter, { TWLoginButton } from 'react-native-simple-twitter';
+import { AsyncStorage } from 'react-native';
+import { TWITTER_API_KEY, TWITTER_API_SECRET_KEY } from 'react-native-dotenv'
+
 
 export default function LoginScreen(props) {
+
+  const onGetAccessToken = async ({ oauth_token, oauth_token_secret }) => {
+    await AsyncStorage.setItem('user_token', JSON.stringify({ token: oauth_token, tokenSecret: oauth_token_secret }));
+    props.navigation.replace("Root");
+  };
+
+  const onSuccess = async (user) => {
+    try {
+      await AsyncStorage.setItem('user_info', JSON.stringify({ ...user }));
+    } catch (err) {
+      console.log(err);
+    }
+
+
+  };
+
+  const onPress = (e) => {
+    console.log('button pressed');
+  };
+
+  const onClose = (e) => {
+    console.log('press close button');
+  };
+
+  const onError = (err) => {
+    console.log(err, 'err');
+  };
+
+  useEffect(() => {
+    /* check AsyncStorage */
+    AsyncStorage.getItem('user_token').then((userToken) => {
+      if (userToken !== null) {
+        const user_token = JSON.parse(userToken);
+        console.log(user_token.token, 'toekn')
+        twitter.setAccessToken(user_token.token, user_token.tokenSecret);
+        const options = {
+          include_entities: false,
+          skip_status: true,
+          include_email: true,
+        };
+        twitter.get('account/verify_credentials.json', options).then((response) => {
+          props.navigation.replace('Root', { user });
+        }).catch((err) => console.log(err, 'err5'));
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    twitter.setConsumerKey(TWITTER_API_KEY, TWITTER_API_SECRET_KEY);
+  }, []);
   return (
     <Wrapper>
       <SwiperWrapper>
@@ -43,13 +97,37 @@ export default function LoginScreen(props) {
       </WelcomeMessage>
       <LoginWarpper>
         <LoginIntro>Let's sign you in</LoginIntro>
-        <LoginButton
-          onPress={() => {
-            props.navigation.navigate("Root");
+        <TWLoginButton
+          style={{
+            textAlign: "center",
+            width: 124,
+            height: 44,
+            backgroundColor: "rgba(21, 190, 128, 1)",
+            opacity: 1,
+            borderRadius: 22,
+            marginLeft: 15
           }}
+          type="TouchableOpacity"
+          onPress={onPress}
+          onGetAccessToken={onGetAccessToken}
+          onSuccess={onSuccess}
+          onClose={onClose}
+          onError={onError}
+          closeText="Close"
         >
           <LoginButtonText>Sign in</LoginButtonText>
-        </LoginButton>
+        </TWLoginButton>
+        {
+          //   <LoginButton
+          //   onPress={() => {
+          //     console.log('beforeLogin')
+          //     onLoginPress()
+          //     // props.navigation.navigate("Root");
+          //   }}
+          // >
+          //   <LoginButtonText>Sign in</LoginButtonText>
+          // </LoginButton>
+        }
       </LoginWarpper>
     </Wrapper>
   );
@@ -117,13 +195,7 @@ const LoginWarpper = styled.View`
   text-align: center;
 `;
 const LoginButton = styled.TouchableOpacity`
-  text-align: center;
-  width: 124px;
-  height: 44px;
-  background: #15be80;
-  opacity: 1;
-  border-radius: 22px;
-  margin-left: 15px;
+  
 `;
 const LoginButtonText = styled.Text`
   text-align: center;
