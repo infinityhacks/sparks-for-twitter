@@ -8,10 +8,11 @@ import {
 } from "../components/SwipeImage";
 import twitter, { TWLoginButton } from 'react-native-simple-twitter';
 import { AsyncStorage } from 'react-native';
-import { TWITTER_API_KEY, TWITTER_API_SECRET_KEY } from 'react-native-dotenv'
+import { TWITTER_API_KEY, TWITTER_API_SECRET_KEY } from '../variables';
+import { connect } from 'react-redux';
+import * as actions from '../store/actions';
 
-
-export default function LoginScreen(props) {
+function LoginScreen(props) {
 
   const onGetAccessToken = async ({ oauth_token, oauth_token_secret }) => {
     await AsyncStorage.setItem('user_token', JSON.stringify({ token: oauth_token, tokenSecret: oauth_token_secret }));
@@ -45,7 +46,6 @@ export default function LoginScreen(props) {
     AsyncStorage.getItem('user_token').then((userToken) => {
       if (userToken !== null) {
         const user_token = JSON.parse(userToken);
-        console.log(user_token.token, 'toekn')
         twitter.setAccessToken(user_token.token, user_token.tokenSecret);
         const options = {
           include_entities: false,
@@ -53,7 +53,8 @@ export default function LoginScreen(props) {
           include_email: true,
         };
         twitter.get('account/verify_credentials.json', options).then((response) => {
-          props.navigation.replace('Root', { user });
+          console.log(response, 'response')
+          props.navigation.replace('Root');
         }).catch((err) => console.log(err, 'err5'));
       }
     });
@@ -132,7 +133,10 @@ export default function LoginScreen(props) {
     </Wrapper>
   );
 }
-
+export default connect(
+  null,
+  actions
+)(LoginScreen);
 const Wrapper = styled.View`
   flex: 1;
   justify-content: center;

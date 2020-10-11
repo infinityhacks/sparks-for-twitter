@@ -15,6 +15,7 @@ export default function DrawerContent(props) {
   const [userInfo, setUserInfo] = useState(null);
   useEffect(() => {
     AsyncStorage.getItem("user_info").then(res => {
+      console.log(JSON.parse(res))
       setUserInfo(JSON.parse(res))
     })
   })
@@ -30,7 +31,7 @@ export default function DrawerContent(props) {
             >
               <Avatar.Image
                 source={{
-                  uri: "https://api.adorable.io/avatars/50/abott@adorable.png",
+                  uri: userInfo.profile_image_url_https,
                 }}
                 size={50}
               />
