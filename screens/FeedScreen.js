@@ -6,6 +6,7 @@ import TwitterCard from "../components/TwitterCard";
 import TwitterGrid from "../components/TwitterGrid";
 import FakeData from "../mocks/timeline.json";
 export default function FeedScreen(props) {
+  console.log(props, "props");
   const renderItem = ({ item }) => (
     <TwitterCard {...item} navigation={props.navigation} />
   );

@@ -6,19 +6,18 @@ import {
   MaterialIcons,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
+import { connect } from "react-redux";
 import { Avatar, Drawer, TouchableRipple, Switch } from "react-native-paper";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-export default function DrawerContent(props) {
-  const [userInfo, setUserInfo] = useState(null);
+function DrawerContent(props) {
+  const [joinTime, setJoinTime] = useState("");
   useEffect(() => {
-    AsyncStorage.getItem("user_info").then(res => {
-      console.log(JSON.parse(res))
-      setUserInfo(JSON.parse(res))
-    })
-  })
+    let time = props.userInfo.created_at.split(" ");
+    setJoinTime(time[1] + " " + time[5]);
+  });
   return (
     <DrawerWarpper style={{ flex: 1 }}>
       <Drawer.Section>
@@ -31,7 +30,7 @@ export default function DrawerContent(props) {
             >
               <Avatar.Image
                 source={{
-                  uri: userInfo.profile_image_url_https,
+                  uri: props.userInfo.profile_image_url_https,
                 }}
                 size={50}
               />
@@ -42,13 +41,13 @@ export default function DrawerContent(props) {
                 <Entypo name="location-pin" size={24} color="white" />
                 Beijing, China
               </Location>
-              <JoinTime>Join in June 2016</JoinTime>
+              <JoinTime>Join in {joinTime}</JoinTime>
             </UserStatus>
           </UserInfo>
           <UserStatusWrapper>
             <UserStatus>
-              <Location>Troye Guo</Location>
-              <JoinTime>@troye_guo</JoinTime>
+              <Location>{props.userInfo.name}</Location>
+              <JoinTime>@{props.userInfo.screen_name}</JoinTime>
             </UserStatus>
             <View
               style={{
@@ -182,6 +181,14 @@ export default function DrawerContent(props) {
     </DrawerWarpper>
   );
 }
+
+const mapStateToProps = (state) => {
+  return {
+    userInfo: state.login.userInfo,
+  };
+};
+const actionCreator = {};
+export default connect(mapStateToProps, actionCreator)(DrawerContent);
 const AvatarWrapper = styled.TouchableOpacity``;
 const DrawerWarpper = styled.View`
   flex: 1;

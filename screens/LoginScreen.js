@@ -6,62 +6,81 @@ import {
   SwipeImage2,
   SwipeImage3,
 } from "../components/SwipeImage";
-import twitter, { TWLoginButton } from 'react-native-simple-twitter';
-import { AsyncStorage } from 'react-native';
-import { TWITTER_API_KEY, TWITTER_API_SECRET_KEY } from '../variables';
-import { connect } from 'react-redux';
-import * as actions from '../store/actions';
+import twitter, { TWLoginButton } from "react-native-simple-twitter";
+import { AsyncStorage } from "react-native";
+import { TWITTER_API_KEY, TWITTER_API_SECRET_KEY } from "../variables";
+import { connect } from "react-redux";
+import { setUserInfo, setTimeLine } from "../store/actions";
 
 function LoginScreen(props) {
-
   const onGetAccessToken = async ({ oauth_token, oauth_token_secret }) => {
-    await AsyncStorage.setItem('user_token', JSON.stringify({ token: oauth_token, tokenSecret: oauth_token_secret }));
+    await AsyncStorage.setItem(
+      "user_token",
+      JSON.stringify({ token: oauth_token, tokenSecret: oauth_token_secret })
+    );
     props.navigation.replace("Root");
   };
 
   const onSuccess = async (user) => {
     try {
-      await AsyncStorage.setItem('user_info', JSON.stringify({ ...user }));
+      await AsyncStorage.setItem("user_info", JSON.stringify({ ...user }));
+      props.setUserInfo(user);
     } catch (err) {
       console.log(err);
     }
-
-
   };
 
   const onPress = (e) => {
-    console.log('button pressed');
+    console.log("button pressed");
   };
 
   const onClose = (e) => {
-    console.log('press close button');
+    console.log("press close button");
   };
 
   const onError = (err) => {
-    console.log(err, 'err');
+    console.log(err, "err");
   };
 
   useEffect(() => {
     /* check AsyncStorage */
-    AsyncStorage.getItem('user_token').then((userToken) => {
+    AsyncStorage.getItem("user_token").then((userToken) => {
       if (userToken !== null) {
         const user_token = JSON.parse(userToken);
         twitter.setAccessToken(user_token.token, user_token.tokenSecret);
-        const options = {
-          include_entities: false,
-          skip_status: true,
-          include_email: true,
-        };
-        twitter.get('account/verify_credentials.json', options).then((response) => {
-          console.log(response, 'response')
-          props.navigation.replace('Root');
-        }).catch((err) => console.log(err, 'err5'));
+        twitter
+          .get("account/verify_credentials.json", {
+            include_entities: false,
+            skip_status: true,
+            include_email: true,
+          })
+          .then((response) => {
+            props.navigation.replace("Root");
+          })
+          .catch((err) => console.log(err, "err5"));
+        // twitter
+        //   .get("statuses/home_timeline.json", {
+        //     include_entities: false,
+        //     count: 10,
+        //     exclude_replies: true,
+        //   })
+        //   .then((response) => {
+        //     console.log(response, "response");
+        //     props.setTimeLine(response);
+        //   })
+        //   .catch((err) => console.log(err, "err5"));
       }
     });
   }, []);
 
   useEffect(() => {
     twitter.setConsumerKey(TWITTER_API_KEY, TWITTER_API_SECRET_KEY);
+
+    AsyncStorage.getItem("user_info").then((res) => {
+      console.log(JSON.parse(res));
+      console.log("set user info");
+      props.setUserInfo(JSON.parse(res));
+    });
   }, []);
   return (
     <Wrapper>
@@ -106,7 +125,7 @@ function LoginScreen(props) {
             backgroundColor: "rgba(21, 190, 128, 1)",
             opacity: 1,
             borderRadius: 22,
-            marginLeft: 15
+            marginLeft: 15,
           }}
           type="TouchableOpacity"
           onPress={onPress}
@@ -133,10 +152,11 @@ function LoginScreen(props) {
     </Wrapper>
   );
 }
-export default connect(
-  null,
-  actions
-)(LoginScreen);
+const mapStateToProps = (state) => {
+  return {};
+};
+const actionCreator = { setUserInfo, setTimeLine };
+export default connect(mapStateToProps, actionCreator)(LoginScreen);
 const Wrapper = styled.View`
   flex: 1;
   justify-content: center;
@@ -198,9 +218,7 @@ const LoginWarpper = styled.View`
   flex: 1;
   text-align: center;
 `;
-const LoginButton = styled.TouchableOpacity`
-  
-`;
+const LoginButton = styled.TouchableOpacity``;
 const LoginButtonText = styled.Text`
   text-align: center;
   font-size: 17px;
