@@ -10,3 +10,15 @@ export const setHomeTimeLine = (data) => {
     payload: data,
   };
 };
+export const setHomeVideo = (data) => {
+  return {
+    type: "SET_HOME_VIDEO",
+    payload: data,
+  };
+};
+export const setHomePhoto = (data) => {
+  return {
+    type: "SET_HOME_PHOTO",
+    payload: data,
+  };
+};

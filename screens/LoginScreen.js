@@ -10,7 +10,13 @@ import twitter, { TWLoginButton } from "react-native-simple-twitter";
 import { AsyncStorage } from "react-native";
 import { TWITTER_API_KEY, TWITTER_API_SECRET_KEY } from "../variables";
 import { connect } from "react-redux";
-import { setUserInfo, setTimeLine } from "../store/actions";
+import {
+  setUserInfo,
+  setHomeTimeLine,
+  setHomePhoto,
+  setHomeVideo,
+} from "../store/actions";
+import _ from "underscore";
 
 function LoginScreen(props) {
   const onGetAccessToken = async ({ oauth_token, oauth_token_secret }) => {
@@ -58,17 +64,59 @@ function LoginScreen(props) {
             props.navigation.replace("Root");
           })
           .catch((err) => console.log(err, "err5"));
-        // twitter
-        //   .get("statuses/home_timeline.json", {
-        //     include_entities: false,
-        //     count: 10,
-        //     exclude_replies: true,
-        //   })
-        //   .then((response) => {
-        //     console.log(response, "response");
-        //     props.setTimeLine(response);
-        //   })
-        //   .catch((err) => console.log(err, "err5"));
+        twitter
+          .get("statuses/home_timeline.json", {
+            include_entities: false,
+            count: 10,
+            exclude_replies: true,
+          })
+          .then((response) => {
+            // console.log(JSON.stringify(response), "response");
+            props.setHomeTimeLine(response);
+            props.setHomeVideo(
+              _.uniq(
+                [
+                  ..._.filter(response, function (item) {
+                    return (
+                      item.extended_entities &&
+                      item.extended_entities.media[0].type === "video"
+                    );
+                  }),
+                  ..._.filter(response, function (item) {
+                    return (
+                      item.retweeted_status &&
+                      item.retweeted_status.extended_entities &&
+                      item.retweeted_status.extended_entities.media[0].type ===
+                        "video"
+                    );
+                  }),
+                ],
+                "id"
+              )
+            );
+            props.setHomePhoto(
+              _.uniq(
+                [
+                  ..._.filter(response, function (item) {
+                    return (
+                      item.extended_entities &&
+                      item.extended_entities.media[0].type === "photo"
+                    );
+                  }),
+                  ..._.filter(response, function (item) {
+                    return (
+                      item.retweeted_status &&
+                      item.retweeted_status.extended_entities &&
+                      item.retweeted_status.extended_entities.media[0].type ===
+                        "photo"
+                    );
+                  }),
+                ],
+                "id"
+              )
+            );
+          })
+          .catch((err) => console.log(err, "err5"));
       }
     });
   }, []);
@@ -77,9 +125,9 @@ function LoginScreen(props) {
     twitter.setConsumerKey(TWITTER_API_KEY, TWITTER_API_SECRET_KEY);
 
     AsyncStorage.getItem("user_info").then((res) => {
-      console.log(JSON.parse(res));
-      console.log("set user info");
-      props.setUserInfo(JSON.parse(res));
+      if (!res) {
+        props.setUserInfo(JSON.parse(res));
+      }
     });
   }, []);
   return (
@@ -155,7 +203,12 @@ function LoginScreen(props) {
 const mapStateToProps = (state) => {
   return {};
 };
-const actionCreator = { setUserInfo, setTimeLine };
+const actionCreator = {
+  setUserInfo,
+  setHomeTimeLine,
+  setHomePhoto,
+  setHomeVideo,
+};
 export default connect(mapStateToProps, actionCreator)(LoginScreen);
 const Wrapper = styled.View`
   flex: 1;

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import FeedScreen from "../screens/FeedScreen";
 import ProfileTabBar from "../components/ProfileTabBar";
 
-function ProfileNavigator(props) {
+export default function ProfileNavigator(props) {
   console.log(ProfileTabBar, "ProfileTabBar");
   return (
     <Tab.Navigator
@@ -17,11 +17,3 @@ function ProfileNavigator(props) {
     </Tab.Navigator>
   );
 }
-
-const mapStateToProps = (state) => {
-  return {
-    userInfo: state.login.userInfo,
-  };
-};
-const actionCreator = {};
-export default connect(mapStateToProps, actionCreator)(ProfileNavigator);

@@ -76,12 +76,6 @@ function DrawerContent(props) {
                 }}
                 size={25}
               />
-              <Avatar.Image
-                source={{
-                  uri: "https://api.adorable.io/avatars/50/abott@adorable.png",
-                }}
-                size={25}
-              />
             </MoreUser>
           </UserStatusWrapper>
         </UserInfoWarpper>
@@ -210,7 +204,7 @@ const UserStatusWrapper = styled.View`
   right: 10px;
 `;
 const UserStatus = styled.View`
-  flex: 3;
+  flex: 5;
   margin-left: 15px;
   flex-direction: column;
 `;

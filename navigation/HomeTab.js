@@ -6,7 +6,7 @@ import RootTabBar from "../components/RootTabBar";
 
 const Tab = createMaterialTopTabNavigator();
 
-function HomeTabs() {
+export default function HomeTabs() {
   return (
     <Tab.Navigator
       tabBar={(props) => <RootTabBar {...props} />}
@@ -18,11 +18,3 @@ function HomeTabs() {
     </Tab.Navigator>
   );
 }
-
-const mapStateToProps = (state) => {
-  return {
-    homeTimeLine: state.login.homeTimeLine,
-  };
-};
-const actionCreator = {};
-export default connect(mapStateToProps, actionCreator)(HomeTabs);

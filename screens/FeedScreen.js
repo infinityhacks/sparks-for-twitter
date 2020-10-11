@@ -5,22 +5,30 @@ import styled from "styled-components";
 import TwitterCard from "../components/TwitterCard";
 import TwitterGrid from "../components/TwitterGrid";
 import FakeData from "../mocks/timeline.json";
-export default function FeedScreen(props) {
-  console.log(props, "props");
+import { connect } from "react-redux";
+import _ from "underscore";
+
+function FeedScreen({ navigation, route, ...props }) {
+  const { homeTimeline, homeVideo, homePhoto } = props;
   const renderItem = ({ item }) => (
-    <TwitterCard {...item} navigation={props.navigation} />
+    <TwitterCard {...item} navigation={navigation} />
   );
   return (
     <FeedWrapper>
       <FlatList
-        data={FakeData}
+        data={
+          route.name === "Feed"
+            ? homeTimeline
+            : route.name === "Video"
+            ? homeVideo
+            : homePhoto
+        }
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
       />
       <TweetButton
         onPress={() => {
-          props.navigation.push("Tweet");
-          console.log(props.navigation, "props");
+          navigation.push("Tweet");
         }}
       >
         <MaterialIcons name="edit" size={26} color="white" />
@@ -28,7 +36,15 @@ export default function FeedScreen(props) {
     </FeedWrapper>
   );
 }
-
+const mapStateToProps = (state) => {
+  return {
+    homeTimeline: state.login.homeTimeline,
+    homeVideo: state.login.homeVideo,
+    homePhoto: state.login.homePhoto,
+  };
+};
+const actionCreator = {};
+export default connect(mapStateToProps, actionCreator)(FeedScreen);
 const FeedWrapper = styled.View`
   flex: 1;
   background-color: "rgba(0,0,0,1)";

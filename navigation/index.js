@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 
 import { createStackNavigator } from "@react-navigation/stack";
-import MediaScreen from "../screens/MediaScreen";
+import VideoScreen from "../screens/VideoScreen";
+import PhotoScreen from "../screens/PhotoScreen";
 import LoginScreen from "../screens/LoginScreen";
 import DetailScreen from "../screens/DetailScreen";
 import HomeScreen from "../screens/HomeScreen";
@@ -18,7 +19,8 @@ export default function RootNavigator() {
       <Stack.Navigator screenOptions={{}} headerMode="none">
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Root" component={DrawerNavigator} />
-        <Stack.Screen name="Media" component={MediaScreen} />
+        <Stack.Screen name="VideoDemo" component={VideoScreen} />
+        <Stack.Screen name="PhotoDemo" component={PhotoScreen} />
         <Stack.Screen name="Profile" component={ProfileNavigator} />
         <Stack.Screen name="Tweet" component={TweetScreen} />
         <Stack.Screen name="UserList" component={UserListScreen} />

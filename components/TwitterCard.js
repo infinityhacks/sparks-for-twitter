@@ -3,9 +3,18 @@ import styled from "styled-components";
 import { Avatar } from "react-native-paper";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { Dimensions, TouchableOpacity } from "react-native";
+import { Feather } from "@expo/vector-icons";
+import CardMedia from "./CardMedia";
+import moment from "moment";
 export default function TwitterCard({ navigation, ...props }) {
   return (
     <CardWrapper>
+      {props.retweeted_status && (
+        <RetweetText>
+          <FontAwesome5 name="share" size={22} color="white" />
+          {props.user.name}{" "}
+        </RetweetText>
+      )}
       <CardHeader
         onPress={() => {
           navigation.navigate("Profile");
@@ -14,58 +23,103 @@ export default function TwitterCard({ navigation, ...props }) {
         <AvatarWrapper>
           <Avatar.Image
             source={{
-              uri: props.avatar,
+              uri: props.retweeted_status
+                ? props.retweeted_status.user.profile_image_url_https
+                : props.user.profile_image_url_https,
             }}
             size={40}
           />
         </AvatarWrapper>
         <UserInfoWrapper>
-          <UserNickname>{props.nickname}</UserNickname>
-          <UserName>@{props.username}</UserName>
+          <UserNickname>
+            {props.retweeted_status
+              ? props.retweeted_status.user.name
+              : props.user.name}
+          </UserNickname>
+          <UserName>
+            @
+            {props.retweeted_status
+              ? props.retweeted_status.user.screen_name
+              : props.user.screen_name}
+          </UserName>
         </UserInfoWrapper>
-        <TweetTime>{props.tweet_time}</TweetTime>
+        <TweetTime>
+          {moment(
+            props.retweeted_status
+              ? props.retweeted_status.created_at
+              : props.created_at
+          ).fromNow()}
+        </TweetTime>
       </CardHeader>
       <TouchableTweet
         onPress={() => {
           navigation.navigate("Detail");
         }}
       >
-        <TweetWrapper>{props.tweet}</TweetWrapper>
+        <TweetWrapper>
+          {props.retweeted_status ? props.retweeted_status.text : props.text}
+        </TweetWrapper>
       </TouchableTweet>
-      <MediaWrapper>
-        <TouchableOpacity
-          onPress={() => {
-            console.log("media");
-            navigation.navigate("Media", props);
-          }}
-          style={{ width: Dimensions.get("window").width, height: 250 }}
-        >
-          <MediaCover source={{ uri: props.media_url }} />
-        </TouchableOpacity>
-
-        <MediaInfo>
-          <WatchCount>{props.media_count} views</WatchCount>
-          <MediaTime>
-            {props.media_time}&nbsp;&nbsp;
-            <FontAwesome5 name="video" size={18} color="white" />
-          </MediaTime>
-        </MediaInfo>
-      </MediaWrapper>
+      {props.retweeted_status && props.retweeted_status.extended_entities && (
+        <MediaWrapper>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate(
+                props.retweeted_status.extended_entities.media[0].type ===
+                  "video"
+                  ? "VideoDemo"
+                  : "PhotoDemo",
+                props
+              );
+            }}
+            style={{ width: Dimensions.get("window").width, height: 250 }}
+          >
+            <CardMedia media={props.retweeted_status.extended_entities.media} />
+          </TouchableOpacity>
+          {props.retweeted_status.extended_entities.media[0].type ===
+            "video" && (
+            <MediaInfo>
+              <Feather name="play-circle" size={50} color="white" />
+            </MediaInfo>
+          )}
+        </MediaWrapper>
+      )}
+      {!props.retweeted_status && props.extended_entities && (
+        <MediaWrapper>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate(
+                props.extended_entities.media[0].type === "video"
+                  ? "VideoDemo"
+                  : "PhotoDemo",
+                props
+              );
+            }}
+            style={{ width: Dimensions.get("window").width, height: 250 }}
+          >
+            <CardMedia media={props.extended_entities.media} />
+          </TouchableOpacity>
+          {props.extended_entities.media[0].type === "video" && (
+            <MediaInfo>
+              <Feather name="play-circle" size={50} color="white" />
+            </MediaInfo>
+          )}
+        </MediaWrapper>
+      )}
       <CardFooter>
         <CommentWrapper>
           <FontAwesome5 name="comment" size={22} color="white" />
           &nbsp;&nbsp;
-          {props.comment_count}
         </CommentWrapper>
         <LikeWrapper>
           <FontAwesome5 name="heart" size={22} color="white" />
           &nbsp;&nbsp;
-          {props.like_count}
+          {props.favorite_count}
         </LikeWrapper>
         <ShareWrapper>
           <FontAwesome5 name="share" size={22} color="white" />
           &nbsp;&nbsp;
-          {props.share_count}
+          {props.retweet_count}
         </ShareWrapper>
         <DownLoadWrapper>
           <FontAwesome5 name="download" size={22} color="white" />
@@ -81,8 +135,13 @@ export default function TwitterCard({ navigation, ...props }) {
 const CardWrapper = styled.View`
   flex-direction: column;
   background-color: "rgba(33, 33, 33, 1)";
-  margin-bottom: 3px;
-  height: 380px;
+  margin-bottom: 5px;
+`;
+const RetweetText = styled.Text`
+  font-size: 18px;
+  background-color: "rgba(33, 33, 33, 1)";
+  color: "rgba(255,255,255,0.6)";
+  line-height: 40px;
 `;
 const CardHeader = styled.TouchableOpacity`
   flex-direction: row;
@@ -103,7 +162,7 @@ const UserName = styled.Text`
   color: "rgba(255,255,255,0.6)";
 `;
 const TweetTime = styled.Text`
-  flex: 2;
+  flex: 3;
   text-align: center;
   color: "rgba(255,255,255,1)";
   line-height: 60px;
@@ -136,8 +195,8 @@ const WatchCount = styled.Text`
 const MediaInfo = styled.View`
   flex-direction: row;
   justify-content: space-between;
-  position: relative;
-  bottom: 30px;
+  position: absolute;
+  top: 100px;
 `;
 const MediaTime = styled.Text`
   flex: 1;
@@ -149,8 +208,7 @@ const MediaTime = styled.Text`
 `;
 const CardFooter = styled.View`
   flex-direction: row;
-  position: relative;
-  bottom: 10px;
+  margin: 10px;
 `;
 const CommentWrapper = styled.Text`
   flex: 2;

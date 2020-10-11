@@ -2,12 +2,7 @@ import React from "react";
 import Animated from "react-native-reanimated";
 import { Ionicons } from "@expo/vector-icons";
 import styled from "styled-components";
-export default function RootTabBar({
-  state,
-  descriptors,
-  navigation,
-  position,
-}) {
+export default function TabBar({ state, descriptors, navigation, position }) {
   return (
     <TabWrapper>
       {state.routes.map((route, index) => {
