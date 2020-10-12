@@ -20,11 +20,16 @@ function PhotoScreen({ route, navigation, ...props }) {
   const MediaCover = styled.Image`
     width: ${Dimensions.get("window").width}px;
     height: ${imageHeight}px;
+  `;
+  const SwiperWrapper = styled.View`
+    width: ${Dimensions.get("window").width}px;
+    height: ${imageHeight}px;
     position: absolute;
     top: ${Dimensions.get("window").height / 2 - imageHeight / 2}px;
+    margin-bottom: 30px;
   `;
-  const renderSwiper = () => {
-    return route.params.extended_entities.media.map((item, index) => {
+  const renderSwiper = (item) => {
+    return item.extended_entities.media.map((item, index) => {
       return (
         <MediaCover
           source={{ uri: item.media_url_https }}
@@ -34,7 +39,6 @@ function PhotoScreen({ route, navigation, ...props }) {
       );
     });
   };
-  console.log(props.homePhoto[0], "homephoto");
 
   const renderVerticalSwiper = () => {
     return props.homePhoto.map((item) => {
@@ -66,7 +70,7 @@ function PhotoScreen({ route, navigation, ...props }) {
                 loop={false}
                 index={0}
               >
-                {renderSwiper()}
+                {renderSwiper(item)}
               </Swiper>
             </SwiperWrapper>
           )}
@@ -94,7 +98,7 @@ function PhotoScreen({ route, navigation, ...props }) {
               </NextWrapper>
             </CardFooter>
             <TrackWrapper>
-              <MediaTime>{route.params.media_time}</MediaTime>
+              <MediaTime>{item.media_time}</MediaTime>
               <Track>
                 <TrackPlayed></TrackPlayed>
               </Track>
@@ -149,12 +153,7 @@ const UserInfoWrapper = styled.View`
 const UserNickname = styled.Text`
   color: "rgba(255,255,255,1)";
 `;
-const SwiperWrapper = styled.View`
-  flex: 2;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 30px;
-`;
+
 const UserName = styled.Text`
   color: "rgba(255,255,255,0.6)";
 `;
@@ -256,7 +255,7 @@ const TrackPlayed = styled.View`
 `;
 const CardFooterWrapper = styled.View`
   position: absolute;
-  bottom: 10px;
+  top: ${Dimensions.get("window").height - 70}px;
 `;
 const SwiperDot = styled.View`
   width: 9px;

@@ -15,6 +15,7 @@ import {
   setHomeTimeLine,
   setHomePhoto,
   setHomeVideo,
+  setHomeMedia,
 } from "../store/actions";
 import _ from "underscore";
 
@@ -73,6 +74,18 @@ function LoginScreen(props) {
           .then((response) => {
             // console.log(JSON.stringify(response), "response");
             props.setHomeTimeLine(response);
+            props.setHomeMedia([
+              ..._.filter(response, function (item) {
+                return item.extended_entities;
+              }),
+              ..._.filter(response, function (item) {
+                return (
+                  !item.extended_entities &&
+                  item.retweeted_status &&
+                  item.retweeted_status.extended_entities
+                );
+              }).map((item) => item.retweeted_status),
+            ]);
             props.setHomeVideo(
               _.uniq(
                 [
@@ -84,12 +97,13 @@ function LoginScreen(props) {
                   }),
                   ..._.filter(response, function (item) {
                     return (
+                      !item.extended_entities &&
                       item.retweeted_status &&
                       item.retweeted_status.extended_entities &&
                       item.retweeted_status.extended_entities.media[0].type ===
                         "video"
                     );
-                  }),
+                  }).map((item) => item.retweeted_status),
                 ],
                 "id"
               )
@@ -105,12 +119,13 @@ function LoginScreen(props) {
                   }),
                   ..._.filter(response, function (item) {
                     return (
+                      !item.extended_entities &&
                       item.retweeted_status &&
                       item.retweeted_status.extended_entities &&
                       item.retweeted_status.extended_entities.media[0].type ===
                         "photo"
                     );
-                  }),
+                  }).map((item) => item.retweeted_status),
                 ],
                 "id"
               )
@@ -208,6 +223,7 @@ const actionCreator = {
   setHomeTimeLine,
   setHomePhoto,
   setHomeVideo,
+  setHomeMedia,
 };
 export default connect(mapStateToProps, actionCreator)(LoginScreen);
 const Wrapper = styled.View`

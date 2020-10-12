@@ -6,6 +6,7 @@ import PhotoScreen from "../screens/PhotoScreen";
 import LoginScreen from "../screens/LoginScreen";
 import DetailScreen from "../screens/DetailScreen";
 import HomeScreen from "../screens/HomeScreen";
+import MediaScreen from '../screens/MediaScreen'
 import SearchScreen from "../screens/SearchScreen";
 import UserListScreen from "../screens/UserListScreen";
 import TweetScreen from "../screens/TweetScreen";
@@ -19,6 +20,7 @@ export default function RootNavigator() {
       <Stack.Navigator screenOptions={{}} headerMode="none">
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Root" component={DrawerNavigator} />
+        <Stack.Screen name="MediaDemo" component={MediaScreen} />
         <Stack.Screen name="VideoDemo" component={VideoScreen} />
         <Stack.Screen name="PhotoDemo" component={PhotoScreen} />
         <Stack.Screen name="Profile" component={ProfileNavigator} />

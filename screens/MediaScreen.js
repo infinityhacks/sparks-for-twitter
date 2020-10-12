@@ -1,15 +1,29 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import { Avatar, TouchableRipple } from "react-native-paper";
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Image } from "react-native";
 import { Dimensions, TouchableOpacity, Text, View } from "react-native";
-import moment from "moment";
 import { Video } from "expo-av";
-import _ from "underscore";
+
+import moment from "moment";
 import Swiper from "react-native-swiper";
 import { connect } from "react-redux";
-function VideoScreen({ route, navigation, ...props }) {
+import _ from "underscore";
+
+function MediaScreen({ route, navigation, ...props }) {
+  // console.log(JSON.stringify(props.homeVideo), "homeVideo");
+  // console.log(JSON.stringify(props.homePhoto), "homePhoto");
+  // console.log(JSON.stringify(props.homeMedia), "homeMedia");
+  // console.log(JSON.stringify(props.homeTimeline), "homeTimeline");
+
+  const [imageHeight, setImageHeight] = useState();
+  Image.getSize(
+    route.params.extended_entities.media[0].media_url_https,
+    (width, height) => {
+      setImageHeight((height / width) * Dimensions.get("window").width);
+    }
+  );
   const [videoHeight, setVideoHeight] = useState();
   Image.getSize(
     route.params.extended_entities.media[0].media_url_https,
@@ -17,14 +31,37 @@ function VideoScreen({ route, navigation, ...props }) {
       setVideoHeight((height / width) * Dimensions.get("window").width);
     }
   );
-  const MediaCover = styled.View`
+  const VideoMediaCover = styled.View`
     width: ${Dimensions.get("window").width}px;
     height: ${videoHeight}px;
     position: absolute;
     top: ${Dimensions.get("window").height / 2 - videoHeight / 2}px;
   `;
+  const MediaCover = styled.Image`
+    width: ${Dimensions.get("window").width}px;
+    height: ${imageHeight}px;
+  `;
+  const ImageSwiperWrapper = styled.View`
+    width: ${Dimensions.get("window").width}px;
+    height: ${imageHeight}px;
+    position: absolute;
+    top: ${Dimensions.get("window").height / 2 - imageHeight / 2}px;
+    margin-bottom: 30px;
+  `;
+  const renderSwiper = (item) => {
+    return item.extended_entities.media.map((item, index) => {
+      return (
+        <MediaCover
+          source={{ uri: item.media_url_https }}
+          style={{}}
+          key={index}
+        />
+      );
+    });
+  };
+
   const renderVerticalSwiper = () => {
-    return props.homeVideo.map((item) => {
+    return props.homeMedia.map((item) => {
       return (
         <View key={item.id}>
           <CardHeaderWrapper>
@@ -45,35 +82,53 @@ function VideoScreen({ route, navigation, ...props }) {
             </CardHeader>
             <TweetWrapper>{item.text}</TweetWrapper>
           </CardHeaderWrapper>
-          {videoHeight && (
-            <MediaCover>
-              <Video
-                source={{
-                  uri: _.max(
-                    item.extended_entities.media[0].video_info.variants,
-                    function (video) {
-                      return video.bitrate;
-                    }
-                  ).url,
-                }}
-                rate={1.0}
-                volume={1.0}
-                isMuted={false}
-                resizeMode="cover"
-                shouldPlay
-                isLooping
-                style={{
-                  width: Dimensions.get("window").width,
-                  height:
-                    Dimensions.get("window").width *
-                    (item.extended_entities.media[0].video_info
-                      .aspect_ratio[1] /
-                      item.extended_entities.media[0].video_info
-                        .aspect_ratio[0]),
-                }}
-              />
-            </MediaCover>
-          )}
+          {_.findIndex(props.homePhoto, {
+            id: item.id,
+          }) > 0 &&
+            imageHeight && (
+              <ImageSwiperWrapper>
+                <Swiper
+                  dot={<SwiperDot style={{ opacity: 0.5 }}></SwiperDot>}
+                  activeDot={<SwiperDot></SwiperDot>}
+                  loop={false}
+                  index={0}
+                >
+                  {renderSwiper(item)}
+                </Swiper>
+              </ImageSwiperWrapper>
+            )}
+          {_.findIndex(props.homeVideo, {
+            id: item.id,
+          }) > 0 &&
+            videoHeight && (
+              <VideoMediaCover>
+                <Video
+                  source={{
+                    uri: _.max(
+                      item.extended_entities.media[0].video_info.variants,
+                      function (video) {
+                        return video.bitrate;
+                      }
+                    ).url,
+                  }}
+                  rate={1.0}
+                  volume={1.0}
+                  isMuted={false}
+                  resizeMode="cover"
+                  shouldPlay
+                  isLooping
+                  style={{
+                    width: Dimensions.get("window").width,
+                    height:
+                      Dimensions.get("window").width *
+                      (item.extended_entities.media[0].video_info
+                        .aspect_ratio[1] /
+                        item.extended_entities.media[0].video_info
+                          .aspect_ratio[0]),
+                  }}
+                />
+              </VideoMediaCover>
+            )}
           <CardFooterWrapper>
             <CardFooter>
               <CommentWrapper>
@@ -112,7 +167,7 @@ function VideoScreen({ route, navigation, ...props }) {
     <CardWrapper>
       <Swiper
         loop={false}
-        index={_.findIndex(props.homeVideo, { id: route.params.id })}
+        index={_.findIndex(props.homeTimeline, { id: route.params.id })}
         horizontal={false}
         showsPagination={false}
       >
@@ -122,15 +177,19 @@ function VideoScreen({ route, navigation, ...props }) {
   );
 }
 const mapStateToProps = (state) => {
-  return { homeVideo: state.login.homeVideo };
+  return {
+    homeMedia: state.login.homeMedia,
+    homePhoto: state.login.homePhoto,
+    homeVideo: state.login.homeVideo,
+    homeTimeline: state.login.homeTimeline,
+  };
 };
 const actionCreator = {};
-export default connect(mapStateToProps, actionCreator)(VideoScreen);
+export default connect(mapStateToProps, actionCreator)(MediaScreen);
 const CardWrapper = styled.View`
   flex: 1;
   background-color: "rgba(33, 33, 33, 1)";
   position: relative;
-  height: 300px;
 `;
 const CardHeader = styled.View`
   flex-direction: row;
@@ -154,6 +213,7 @@ const UserInfoWrapper = styled.View`
 const UserNickname = styled.Text`
   color: "rgba(255,255,255,1)";
 `;
+
 const UserName = styled.Text`
   color: "rgba(255,255,255,0.6)";
 `;
@@ -193,6 +253,8 @@ const MediaTime = styled.Text`
 `;
 const CardFooter = styled.View`
   flex-direction: row;
+  position: relative;
+  bottom: 10px;
 `;
 const CommentWrapper = styled.Text`
   flex: 1;
@@ -252,9 +314,14 @@ const TrackPlayed = styled.View`
   border-radius: 2px;
 `;
 const CardFooterWrapper = styled.View`
-  flex-direction: column;
-  width: ${Dimensions.get("window").width}px;
   position: absolute;
   top: ${Dimensions.get("window").height - 70}px;
-  z-index: 10;
+`;
+const SwiperDot = styled.View`
+  width: 9px;
+  height: 9px;
+  background: #fff9f9;
+  border-radius: 4px;
+  opacity: 1;
+  margin: 3px;
 `;

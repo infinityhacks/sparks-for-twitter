@@ -6,7 +6,8 @@ import TwitterCard from "../components/TwitterCard";
 import FakeTweets from "../mocks/timeline.json";
 import FakeComments from "../mocks/comments.json";
 import { Dimensions, TouchableOpacity, FlatList, View } from "react-native";
-export default function DetailScreen({ navigation, ...props }) {
+export default function DetailScreen({ navigation, route, ...props }) {
+  console.log(route.params, "params");
   const renderItem = ({ item }) => {
     return (
       <CardWrapper>
@@ -53,7 +54,7 @@ export default function DetailScreen({ navigation, ...props }) {
     <DetailScreenWrapper>
       <FlatList
         ListHeaderComponent={
-          <TwitterCard {...FakeTweets[0]} navigation={navigation} />
+          <TwitterCard {...route.params} navigation={navigation} />
         }
         data={FakeComments}
         renderItem={renderItem}

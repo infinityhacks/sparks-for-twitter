@@ -22,3 +22,9 @@ export const setHomePhoto = (data) => {
     payload: data,
   };
 };
+export const setHomeMedia = (data) => {
+  return {
+    type: "SET_HOME_MEDIA",
+    payload: data,
+  };
+};

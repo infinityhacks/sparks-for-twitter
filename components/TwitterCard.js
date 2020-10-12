@@ -6,7 +6,7 @@ import { Dimensions, TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import CardMedia from "./CardMedia";
 import moment from "moment";
-export default function TwitterCard({ navigation, ...props }) {
+export default function TwitterCard({ navigation, route, ...props }) {
   return (
     <CardWrapper>
       {props.retweeted_status && (
@@ -53,7 +53,7 @@ export default function TwitterCard({ navigation, ...props }) {
       </CardHeader>
       <TouchableTweet
         onPress={() => {
-          navigation.navigate("Detail");
+          navigation.navigate("Detail", props);
         }}
       >
         <TweetWrapper>
@@ -64,12 +64,15 @@ export default function TwitterCard({ navigation, ...props }) {
         <MediaWrapper>
           <TouchableOpacity
             onPress={() => {
+              console.log(route.name, "name");
               navigation.navigate(
-                props.retweeted_status.extended_entities.media[0].type ===
-                  "video"
+                route.name === "Feed"
+                  ? "MediaDemo"
+                  : props.retweeted_status.extended_entities.media[0].type ===
+                    "video"
                   ? "VideoDemo"
                   : "PhotoDemo",
-                props
+                props.retweeted_status
               );
             }}
             style={{ width: Dimensions.get("window").width, height: 250 }}
@@ -88,8 +91,11 @@ export default function TwitterCard({ navigation, ...props }) {
         <MediaWrapper>
           <TouchableOpacity
             onPress={() => {
+              console.log(route.name, "name");
               navigation.navigate(
-                props.extended_entities.media[0].type === "video"
+                route.name === "Feed"
+                  ? "MediaDemo"
+                  : props.extended_entities.media[0].type === "video"
                   ? "VideoDemo"
                   : "PhotoDemo",
                 props
