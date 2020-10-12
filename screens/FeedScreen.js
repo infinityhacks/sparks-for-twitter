@@ -11,7 +11,7 @@ import _ from "underscore";
 function FeedScreen({ navigation, route, ...props }) {
   const { homeTimeline, homeVideo, homePhoto } = props;
   const renderItem = ({ item }) => (
-    <TwitterCard {...item} navigation={navigation} route={route} />
+    <TwitterCard {...item} navigation={navigation} />
   );
   return (
     <FeedWrapper>

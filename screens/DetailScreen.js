@@ -7,7 +7,6 @@ import FakeTweets from "../mocks/timeline.json";
 import FakeComments from "../mocks/comments.json";
 import { Dimensions, TouchableOpacity, FlatList, View } from "react-native";
 export default function DetailScreen({ navigation, route, ...props }) {
-  console.log(route.params, "params");
   const renderItem = ({ item }) => {
     return (
       <CardWrapper>

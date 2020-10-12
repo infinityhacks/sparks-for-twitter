@@ -14,8 +14,6 @@ export const login = (state = initState, action) => {
       return { ...state, homeVideo: action.payload };
     case "SET_HOME_PHOTO":
       return { ...state, homePhoto: action.payload };
-    case "SET_HOME_MEDIA":
-      return { ...state, homeMedia: action.payload };
     default:
       return state;
   }

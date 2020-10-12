@@ -7,10 +7,10 @@ import { Avatar } from "react-native-paper";
 import TwitterCard from "../components/TwitterCard";
 import TwitterGrid from "../components/TwitterGrid";
 import { Ionicons } from "@expo/vector-icons";
-
+import { connect } from "react-redux";
 import FakeTweets from "../mocks/timeline.json";
 import FakeUsers from "../mocks/followerList.json";
-export default function SearchScreen(props) {
+function SearchScreen(props) {
   const renderTweets = ({ item }) => (
     <TwitterCard {...item} navigation={props.navigation} />
   );
@@ -59,7 +59,7 @@ export default function SearchScreen(props) {
               </SearchUserWrapper>
             </>
           }
-          data={FakeTweets}
+          data={props.homeTimeline}
           renderItem={renderTweets}
           keyExtractor={(item) => item.id}
         />
@@ -67,7 +67,11 @@ export default function SearchScreen(props) {
     </SearchScreenWrapper>
   );
 }
-
+const mapStateToProps = (state) => {
+  return { homeTimeline: state.login.homeTimeline };
+};
+const actionCreator = {};
+export default connect(mapStateToProps, actionCreator)(SearchScreen);
 const SearchScreenWrapper = styled.View`
   flex: 1;
   background-color: "rgba(0,0,0,1)";

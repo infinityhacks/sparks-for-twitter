@@ -26,10 +26,9 @@ function PhotoScreen({ route, navigation, ...props }) {
     height: ${imageHeight}px;
     position: absolute;
     top: ${Dimensions.get("window").height / 2 - imageHeight / 2}px;
-    margin-bottom: 30px;
   `;
-  const renderSwiper = (item) => {
-    return item.extended_entities.media.map((item, index) => {
+  const renderSwiper = () => {
+    return route.params.extended_entities.media.map((item, index) => {
       return (
         <MediaCover
           source={{ uri: item.media_url_https }}
@@ -70,7 +69,7 @@ function PhotoScreen({ route, navigation, ...props }) {
                 loop={false}
                 index={0}
               >
-                {renderSwiper(item)}
+                {renderSwiper()}
               </Swiper>
             </SwiperWrapper>
           )}
@@ -98,7 +97,7 @@ function PhotoScreen({ route, navigation, ...props }) {
               </NextWrapper>
             </CardFooter>
             <TrackWrapper>
-              <MediaTime>{item.media_time}</MediaTime>
+              <MediaTime>{route.params.media_time}</MediaTime>
               <Track>
                 <TrackPlayed></TrackPlayed>
               </Track>

@@ -10,18 +10,18 @@ import _ from "underscore";
 import Swiper from "react-native-swiper";
 import { connect } from "react-redux";
 function VideoScreen({ route, navigation, ...props }) {
-  const [videoHeight, setVideoHeight] = useState();
+  const [imageHeight, setImageHeight] = useState();
   Image.getSize(
     route.params.extended_entities.media[0].media_url_https,
     (width, height) => {
-      setVideoHeight((height / width) * Dimensions.get("window").width);
+      setImageHeight((height / width) * Dimensions.get("window").width);
     }
   );
   const MediaCover = styled.View`
     width: ${Dimensions.get("window").width}px;
-    height: ${videoHeight}px;
+    height: ${imageHeight}px;
     position: absolute;
-    top: ${Dimensions.get("window").height / 2 - videoHeight / 2}px;
+    top: ${Dimensions.get("window").height / 2 - imageHeight / 2}px;
   `;
   const renderVerticalSwiper = () => {
     return props.homeVideo.map((item) => {
@@ -45,7 +45,7 @@ function VideoScreen({ route, navigation, ...props }) {
             </CardHeader>
             <TweetWrapper>{item.text}</TweetWrapper>
           </CardHeaderWrapper>
-          {videoHeight && (
+          {imageHeight && item.extended_entities && (
             <MediaCover>
               <Video
                 source={{
@@ -66,9 +66,9 @@ function VideoScreen({ route, navigation, ...props }) {
                   width: Dimensions.get("window").width,
                   height:
                     Dimensions.get("window").width *
-                    (item.extended_entities.media[0].video_info
+                    (route.params.extended_entities.media[0].video_info
                       .aspect_ratio[1] /
-                      item.extended_entities.media[0].video_info
+                      route.params.extended_entities.media[0].video_info
                         .aspect_ratio[0]),
                 }}
               />
@@ -130,7 +130,6 @@ const CardWrapper = styled.View`
   flex: 1;
   background-color: "rgba(33, 33, 33, 1)";
   position: relative;
-  height: 300px;
 `;
 const CardHeader = styled.View`
   flex-direction: row;
@@ -193,6 +192,8 @@ const MediaTime = styled.Text`
 `;
 const CardFooter = styled.View`
   flex-direction: row;
+  position: relative;
+  bottom: 10px;
 `;
 const CommentWrapper = styled.Text`
   flex: 1;
@@ -252,8 +253,6 @@ const TrackPlayed = styled.View`
   border-radius: 2px;
 `;
 const CardFooterWrapper = styled.View`
-  flex-direction: column;
-  width: ${Dimensions.get("window").width}px;
   position: absolute;
   top: ${Dimensions.get("window").height - 70}px;
   z-index: 10;
